@@ -14,7 +14,7 @@ import java.time.Instant;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@Builder(toBuilder = true)
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 @Table(name = "tokens")
 public class RefreshToken {
@@ -27,7 +27,7 @@ public class RefreshToken {
     private Instant expiryDate;
 
     @OneToOne
-    @JoinColumn(name = "id", referencedColumnName = "user_id")  // one token for user
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id")  // one token for user
     private UserInfo userInfo;
 
 }
