@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-@Service
+//@Service
 public class CustomUserDetails extends UserInfo implements UserDetails {
 
     private String username;
@@ -25,8 +25,10 @@ public class CustomUserDetails extends UserInfo implements UserDetails {
         this.password = userInfo.getPassword();
         List<GrantedAuthority> auth_list = new ArrayList<>();
 
-        for(UserRole role : userInfo.getRoles()){
-            auth_list.add(new SimpleGrantedAuthority(role.getName().toUpperCase()));
+        if (userInfo.getRoles() != null) {
+            for (UserRole role : userInfo.getRoles()) {
+                auth_list.add(new SimpleGrantedAuthority(role.getName().toUpperCase()));
+            }
         }
 
         this.authorities = auth_list;

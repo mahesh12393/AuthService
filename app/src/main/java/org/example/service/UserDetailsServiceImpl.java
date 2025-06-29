@@ -7,6 +7,7 @@ import org.example.model.UserInfoDto;
 import org.example.repository.UserRepository;
 import org.example.util.UserValidationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -30,12 +31,17 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserInfo userInfo = userRepository.findByUsername(username);
+        try{
+            UserInfo userInfo = userRepository.findByUsername(username);
 
-        if(username == null){
-            throw new UsernameNotFoundException("Could not find User. Please sign up first!");
+            if(username == null){
+                throw new UsernameNotFoundException("Could not find User. Please sign up first!");
+            }
+            return new CustomUserDetails(userInfo);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
         }
-        return new CustomUserDetails(userInfo);
     }
 
     public UserInfo checkIfUserAlreadyExist(UserInfoDto userInfoDto){
@@ -44,11 +50,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 
     public Boolean signupUser(UserInfoDto userInfoDto){
-        if(!UserValidationUtil.isValidEmail(userInfoDto)){
+        if(userInfoDto.getEmail() != null && !userInfoDto.getEmail().isEmpty() && !UserValidationUtil.isValidEmail(userInfoDto)){
             throw new IllegalArgumentException("Provided email address is invalid!");
         }
 
-        if(!UserValidationUtil.isValidPhoneNumber(userInfoDto)){
+        if(userInfoDto.getPhoneNumber() != null && !userInfoDto.getPhoneNumber().isEmpty() && !UserValidationUtil.isValidPhoneNumber(userInfoDto)){
             throw new IllegalArgumentException("Provided phone number is invalid!");
         }
         userInfoDto.setPassword(passwordEncoder.encode(userInfoDto.getPassword()));
