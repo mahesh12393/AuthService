@@ -8,8 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface UserRepository extends CrudRepository<UserInfo, Long> {
+public interface UserRepository extends CrudRepository<UserInfo, String> {
+//    @Query("SELECT u FROM UserInfo u WHERE u.userName = :username")
     UserInfo findByUsername(String username);
-//    @Query("SELECT u FROM UserInfo u LEFT JOIN FETCH u.roles WHERE u.username = :username")
-//    Optional<UserInfo> findByUsername(String username);
 }

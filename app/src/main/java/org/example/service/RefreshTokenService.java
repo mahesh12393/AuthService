@@ -23,6 +23,16 @@ public class RefreshTokenService {
     public RefreshToken createRefreshToken(String username){
         UserInfo extractedUserInfo = userRepository.findByUsername(username);
 
+        RefreshToken existingToken = refreshTokenRepository.findByUserInfo(extractedUserInfo);
+
+//        if user already has an existing token just update the token instead of new entry
+        if(existingToken != null){
+            existingToken.setToken(UUID.randomUUID().toString());
+            existingToken.setExpiryDate(Instant.now().plusMillis(6000000));
+            return refreshTokenRepository.save(existingToken);
+        }
+
+        //if not present then create new
         RefreshToken refreshToken = RefreshToken.builder()
                 .userInfo(extractedUserInfo)
                 .token(UUID.randomUUID().toString())

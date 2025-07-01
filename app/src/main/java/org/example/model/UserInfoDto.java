@@ -17,7 +17,7 @@ import org.example.entities.UserInfo;
 public class UserInfoDto extends UserInfo {
     
 //    Snake case strategy changes the name from user_name to userName and vice versa
-    private String userName;
+    private String username;
     
     private String lastName;
     

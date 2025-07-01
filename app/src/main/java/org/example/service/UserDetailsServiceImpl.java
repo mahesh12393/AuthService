@@ -34,7 +34,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         try{
             UserInfo userInfo = userRepository.findByUsername(username);
 
-            if(username == null){
+            System.out.println("value of userInfo recieved is " + userInfo);
+
+            if(userInfo == null){
                 throw new UsernameNotFoundException("Could not find User. Please sign up first!");
             }
             return new CustomUserDetails(userInfo);
@@ -45,7 +47,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     public UserInfo checkIfUserAlreadyExist(UserInfoDto userInfoDto){
-        return userRepository.findByUsername(userInfoDto.getUserName());
+        return userRepository.findByUsername(userInfoDto.getUsername());
     }
 
 
@@ -62,7 +64,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if(Objects.nonNull(checkIfUserAlreadyExist(userInfoDto))) return Boolean.FALSE;
 
         String userId = UUID.randomUUID().toString();
-        userRepository.save(new UserInfo(userId,userInfoDto.getUserName(),userInfoDto.getPassword(),new HashSet<>()));
+        userRepository.save(new UserInfo(userId,userInfoDto.getUsername(),userInfoDto.getPassword(),new HashSet<>()));
 
         return Boolean.TRUE;
     }

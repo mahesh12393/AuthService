@@ -38,8 +38,8 @@ public class AuthController {
             if(Boolean.FALSE.equals(isSignedUp)){
                 return new ResponseEntity<>("User Already Exists", HttpStatus.BAD_REQUEST);
             }
-            RefreshToken refreshToken = refreshTokenService.createRefreshToken(userInfoDto.getUserName());
-            String jwtToken = jwtService.GenerateToken(userInfoDto.getUserName());
+            RefreshToken refreshToken = refreshTokenService.createRefreshToken(userInfoDto.getUsername());
+            String jwtToken = jwtService.GenerateToken(userInfoDto.getUsername());
             return new ResponseEntity<>(JwtResponseDto.builder().accessToken(jwtToken).token(refreshToken.getToken()).build(),HttpStatus.OK);
         } catch (Exception e){
             e.printStackTrace();

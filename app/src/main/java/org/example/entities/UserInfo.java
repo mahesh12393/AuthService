@@ -34,7 +34,7 @@ public class UserInfo {
 
 
 
-    public String getUserName(){
+    public String getUsername(){
         return username;
     }
 

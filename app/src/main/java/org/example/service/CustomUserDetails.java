@@ -21,7 +21,7 @@ public class CustomUserDetails extends UserInfo implements UserDetails {
 
 //    Constructor
     public CustomUserDetails(UserInfo userInfo){
-        this.username = userInfo.getUserName();
+        this.username = userInfo.getUsername();
         this.password = userInfo.getPassword();
         List<GrantedAuthority> auth_list = new ArrayList<>();
 

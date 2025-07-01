@@ -32,8 +32,10 @@ public class TokenController {
 
     @PostMapping("auth/v1/login")
     public ResponseEntity AuthenticateAndGetToken(@RequestBody AuthRequestDto authRequestDto){
+        System.out.println("the details of user recieved are "+ authRequestDto.getUsername() + " and passowrd is " + authRequestDto.getPassword());
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequestDto.getUsername(),authRequestDto.getPassword()));
         if(authentication.isAuthenticated()){
+            System.out.println("is authenticated and is inside   ");
             RefreshToken refreshToken = refreshTokenService.createRefreshToken(authRequestDto.getUsername());
             return new ResponseEntity<>(JwtResponseDto.builder()
                     .accessToken(jwtService.GenerateToken(authRequestDto.getUsername()))
@@ -51,7 +53,7 @@ public class TokenController {
                 .map(refreshTokenService::verifyExpiration)
                 .map(RefreshToken::getUserInfo) // passing functional interface
                 .map(userInfo -> {
-                    String accessToken = jwtService.GenerateToken(userInfo.getUserName());
+                    String accessToken = jwtService.GenerateToken(userInfo.getUsername());
                     return JwtResponseDto.builder()
                             .accessToken(accessToken)
                             .token(refreshTokenDto.getToken()).build();
