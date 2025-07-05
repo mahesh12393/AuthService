@@ -31,6 +31,7 @@ public class UserInfoProducer {
         Message<UserInfoDto> message = MessageBuilder.withPayload(userInfoDto)
                             .setHeader(KafkaHeaders.TOPIC, TOPIC_NAME).build();
 
+        System.out.println("Sending message details to kafka is " + message);
         kafkaTemplate.send(message);
     }
 
