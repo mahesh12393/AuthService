@@ -1,7 +1,6 @@
 package org.example.eventProducer;
 
-import
-        org.springframework.messaging.Message;
+import org.springframework.messaging.Message;
 import org.example.model.UserInfoDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -9,6 +8,7 @@ import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.messaging.support.MessageBuilder;
+import java.util.UUID;
 
 @Service
 public class UserInfoProducer {
@@ -28,6 +28,9 @@ public class UserInfoProducer {
 
 
     public void sendEventToKafka(UserInfoDto userInfoDto){
+        if (userInfoDto.getUserId() == null) {
+            userInfoDto.setUserId(UUID.randomUUID().toString());
+        }
         Message<UserInfoDto> message = MessageBuilder.withPayload(userInfoDto)
                             .setHeader(KafkaHeaders.TOPIC, TOPIC_NAME).build();
 
