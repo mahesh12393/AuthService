@@ -1,0 +1,42 @@
+package org.example.eventProducer;
+
+import org.springframework.messaging.Message;
+import org.example.model.UserInfoDto;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.kafka.support.KafkaHeaders;
+import org.springframework.stereotype.Service;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.messaging.support.MessageBuilder;
+import java.util.UUID;
+
+@Service
+public class UserInfoProducer {
+
+//    private final KafkaTemplate<String, UserInfoDto> kafkaTemplate;
+    private final KafkaTemplate<String,UserInfoDto> kafkaTemplate;
+
+
+    @Value("${spring.kafka.topic.name}")
+    private String TOPIC_NAME;
+
+    @Autowired
+    UserInfoProducer(KafkaTemplate<String, UserInfoDto> kafkaTemplate){
+        this.kafkaTemplate = kafkaTemplate;
+
+    }
+
+
+    public void sendEventToKafka(UserInfoDto userInfoDto){
+        if (userInfoDto.getUserId() == null) {
+            userInfoDto.setUserId(UUID.randomUUID().toString());
+        }
+        Message<UserInfoDto> message = MessageBuilder.withPayload(userInfoDto)
+                            .setHeader(KafkaHeaders.TOPIC, TOPIC_NAME).build();
+
+        System.out.println("Sending message details to kafka is " + message);
+        kafkaTemplate.send(message);
+    }
+
+
+}
